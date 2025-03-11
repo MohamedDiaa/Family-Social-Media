@@ -18,6 +18,11 @@ struct ContentView: View {
                     Text("Home")
                 }
 
+            PhotoPickerScreen()
+                .tabItem {
+                    Image(systemName: "photo")
+                    Text("Pick")
+                }
             CameraScreen()
                 .tabItem {
                     Image(systemName: "camera")

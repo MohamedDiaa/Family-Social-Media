@@ -9,38 +9,17 @@ import SwiftUI
 import PhotosUI
 
 struct CameraScreen: View {
-
-
-    @State private var selectedItem: PhotosPickerItem?
-    @State var processedImage: Image?
+    @State var selectedImage: PhotosPickerItem?
 
     var body: some View {
+        VStack {
+            Text("CameraScreen")
 
-        PhotosPicker(selection: $selectedItem) {
+            Button {
 
-            if let processedImage {
-                VStack {
-                    processedImage
-                        .resizable()
-                        .scaledToFit()
-
-                    Text("Please edit this image")
-                }
-            } else {
-                ContentUnavailableView("No Picture", systemImage: "photo.badge.plus", description: Text("Import a photo to get started"))
+            } label: {
+                Text("Take Photo")
             }
-
-        }
-        .onChange(of: selectedItem, loadImage)
-
-    }
-
-    func loadImage() {
-        Task {
-            guard let imageData = try await selectedItem?.loadTransferable(type: Data.self) else { return }
-            guard let inputImage = UIImage(data: imageData) else { return }
-            processedImage = Image.init(uiImage: inputImage)
-            // more code to come
         }
     }
 }
