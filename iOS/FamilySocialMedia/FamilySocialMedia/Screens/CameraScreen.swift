@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
-import PhotosUI
 
 struct CameraScreen: View {
-    @State var selectedImage: PhotosPickerItem?
+
+    @State private var viewModel = CameraViewModel()
 
     var body: some View {
-        VStack {
-            Text("CameraScreen")
 
+        if(true) {
+            CameraPreview(image: $viewModel.currentFrame)
+        }
+        else {
             Button {
 
             } label: {
@@ -23,6 +25,7 @@ struct CameraScreen: View {
         }
     }
 }
+
 
 
 
