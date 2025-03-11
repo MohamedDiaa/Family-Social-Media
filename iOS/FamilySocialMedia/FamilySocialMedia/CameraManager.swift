@@ -63,7 +63,6 @@ class CameraManager: NSObject {
               let deviceInput = try? AVCaptureDeviceInput(device: systemPreferredCamera)
         else { return }
 
-        // 2.
         captureSession.beginConfiguration()
 
         // 3.
