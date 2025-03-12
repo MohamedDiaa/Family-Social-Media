@@ -25,6 +25,7 @@ struct CameraScreen: View {
                         Spacer()
 
                         Button {
+                            camera.reTake()
 
                         } label: {
                             Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.camera")
@@ -43,9 +44,12 @@ struct CameraScreen: View {
 
                     if camera.isTaken {
                         Button {
+                            if !camera.isSaved {
+                                camera.savePic()
+                            }
 
                         } label: {
-                            Text("Save")
+                            Text(camera.isSaved ? "Saved" : "Save")
                                 .foregroundStyle(.black)
                                 .fontWeight(.semibold)
                                 .padding(.vertical, 10)
@@ -60,7 +64,7 @@ struct CameraScreen: View {
                     }
                     else {
                         Button {
-                            camera.isTaken.toggle()
+                            camera.takePic()
 
                         } label: {
 
@@ -84,12 +88,15 @@ struct CameraScreen: View {
     }
 }
 
-class CameraModel: ObservableObject {
+class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 
     @Published var isTaken = false
     @Published var session = AVCaptureSession()
     @Published var alert = false
     @Published var output = AVCapturePhotoOutput()
+    @Published var isSaved = false
+    @Published var picData = Data.init(count: 0)
+
     var preview: AVCaptureVideoPreviewLayer!
 
     func check() {
@@ -135,6 +142,56 @@ class CameraModel: ObservableObject {
         }
 
     }
+
+    func takePic() {
+        DispatchQueue.global(qos: .background).async{
+            self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+            self.session.stopRunning()
+
+            DispatchQueue.main.async {
+                withAnimation {
+                    self.isTaken.toggle()
+                }
+            }
+        }
+    }
+
+    func reTake() {
+        DispatchQueue.global(qos: .background).async {
+
+            self.session.startRunning()
+
+            DispatchQueue.main.async {
+                withAnimation {
+                    self.isTaken.toggle()
+                    self.isSaved = false
+                }
+            }
+        }
+    }
+
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: (any Error)?) {
+        if error != nil {
+            return
+        }
+        print("pic taken...")
+
+        guard let imageData = photo.fileDataRepresentation()
+        else { return }
+
+        self.picData = imageData
+
+    }
+
+    func savePic() {
+
+        let image = UIImage.init(data: self.picData)!
+
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+
+        self.isSaved = true
+        print("saved successfully")
+    }
 }
 
 struct CameraPreview: UIViewRepresentable {
@@ -151,8 +208,9 @@ struct CameraPreview: UIViewRepresentable {
         camera.preview.videoGravity = .resizeAspectFill
 
         view.layer.addSublayer(camera.preview)
-        camera.session.startRunning()
-
+        DispatchQueue.global(qos: .background).async {
+            camera.session.startRunning()
+        }
         return view
     }
 
