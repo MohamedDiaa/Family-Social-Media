@@ -8,15 +8,18 @@
 import SwiftUI
 import AVFoundation
 
-struct CameraScreen: View {
+struct CameraScreen2: View {
 
     @StateObject var camera = CameraModel()
+    @State private var viewModel = CameraViewModel()
+
     var body: some View {
 
         ZStack {
 
-            CameraPreview(camera: camera)
-                .ignoresSafeArea(.all, edges: .all)
+            CameraStreamPreview(image: $viewModel.currentFrame)
+          //  CameraPreview(camera: camera)
+           //     .ignoresSafeArea(.all, edges: .all)
 
             VStack {
 
@@ -95,8 +98,7 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     @Published var alert = false
     @Published var output = AVCapturePhotoOutput()
     @Published var isSaved = false
-    @Published var picData = Data.init(count: 0)
-
+    @Published var picData: Data? = Data.init(count: 0)
     var preview: AVCaptureVideoPreviewLayer!
 
     func check() {
@@ -122,7 +124,7 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 
         do {
             self.session.beginConfiguration()
-            let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)!
+            let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
 
             let input = try AVCaptureDeviceInput(device: device)
 
@@ -144,11 +146,17 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     }
 
     func takePic() {
-        DispatchQueue.global(qos: .background).async{
-            self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        print("take pic")
+        DispatchQueue.global(qos: .userInitiated).async{
+
             self.session.stopRunning()
 
+            let settings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+            self.output.capturePhoto(with: settings, delegate: self)
+
+
             DispatchQueue.main.async {
+
                 withAnimation {
                     self.isTaken.toggle()
                 }
@@ -157,24 +165,28 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
     }
 
     func reTake() {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
 
             self.session.startRunning()
 
             DispatchQueue.main.async {
                 withAnimation {
                     self.isTaken.toggle()
+                    self.picData = nil
                     self.isSaved = false
                 }
             }
         }
     }
 
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: (any Error)?) {
+
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+
+        print("pic taken...")
         if error != nil {
+            print(error)
             return
         }
-        print("pic taken...")
 
         guard let imageData = photo.fileDataRepresentation()
         else { return }
@@ -185,7 +197,9 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
 
     func savePic() {
 
-        let image = UIImage.init(data: self.picData)!
+        guard let picData = self.picData,
+              let image = UIImage.init(data: picData)
+        else { return }
 
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
 
@@ -208,7 +222,7 @@ struct CameraPreview: UIViewRepresentable {
         camera.preview.videoGravity = .resizeAspectFill
 
         view.layer.addSublayer(camera.preview)
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
             camera.session.startRunning()
         }
         return view
@@ -221,5 +235,5 @@ struct CameraPreview: UIViewRepresentable {
 }
 
 #Preview {
-    CameraScreen()
+    CameraScreen2()
 }
