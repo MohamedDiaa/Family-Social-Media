@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Foundation
+import AVFoundation
 
 @Observable
 class CameraViewModel {
@@ -13,8 +14,9 @@ class CameraViewModel {
     var currentFrame: CGImage?
     var isTaken = false
     var isSaved = false
+    var position: AVCaptureDevice.Position = .back
 
-    private let cameraManager = CameraManager()
+    var cameraManager = CameraManager()
 
     init() {
         Task {
@@ -71,5 +73,16 @@ class CameraViewModel {
 
         self.isSaved = true
         print("saved successfully")
+    }
+
+    func switchCameraPosition() {
+        position = position == .back ? .front : .back
+        cameraManager.captureSession.stopRunning()
+        cameraManager = CameraManager(position: position)
+        Task {
+            await handleCameraPreviews()
+        }
+
+
     }
 }

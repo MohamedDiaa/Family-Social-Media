@@ -19,9 +19,10 @@ struct CameraScreen: View {
 
             VStack {
 
-                if viewModel.isTaken {
-                    HStack {
-                        Spacer()
+                HStack {
+                    Spacer()
+
+                    if viewModel.isTaken {
 
                         Button {
                             viewModel.reTake()
@@ -34,6 +35,19 @@ struct CameraScreen: View {
                                 .clipShape(Circle())
                         }
                         .padding(.trailing,10)
+                    }
+                    else {
+
+                        Button {
+                            viewModel.switchCameraPosition()
+                        } label: {
+                            Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
+                                .foregroundStyle(.blue)
+                                .padding()
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        }
+                        .padding(.trailing, 10)
                     }
                 }
 

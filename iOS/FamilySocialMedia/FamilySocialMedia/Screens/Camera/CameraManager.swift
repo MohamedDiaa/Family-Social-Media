@@ -16,7 +16,6 @@ class CameraManager: NSObject {
 
     private let systemPreferredCamera = AVCaptureDevice.default(for: .video)
 
-
     private var sessionQueue = DispatchQueue(label: "video.preview.session")
 
     private var isAuthorized: Bool {
@@ -44,23 +43,22 @@ class CameraManager: NSObject {
         }
     }()
 
-
     // 1.
-    override init() {
+    init(position:  AVCaptureDevice.Position = .back) {
         super.init()
 
         Task {
-            await configureSession()
+            await configureSession(position: position)
             await startSession()
         }
     }
 
     // 2.
-    private func configureSession() async {
+    private func configureSession(position:  AVCaptureDevice.Position) async {
         // 1.
+
         guard await isAuthorized,
-              let systemPreferredCamera,
-              let deviceInput = try? AVCaptureDeviceInput(device: systemPreferredCamera)
+              let deviceInput = configureCameraInput(position: position)
         else { return }
 
         captureSession.beginConfiguration()
@@ -98,7 +96,25 @@ class CameraManager: NSObject {
         guard await isAuthorized else { return }
         /// Start the capture session flow of data
         captureSession.startRunning()
-    }}
+    }
+
+
+    func configureCameraInput(position:  AVCaptureDevice.Position) ->  AVCaptureDeviceInput? {
+
+        switch position {
+        case .back:
+            guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+            else { return nil }
+            return try? AVCaptureDeviceInput(device: device)
+
+        default:
+           guard let systemPreferredCamera,
+            let deviceInput = try? AVCaptureDeviceInput(device: systemPreferredCamera)
+            else { return nil}
+            return  deviceInput
+        }
+    }
+}
 
 
 extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
