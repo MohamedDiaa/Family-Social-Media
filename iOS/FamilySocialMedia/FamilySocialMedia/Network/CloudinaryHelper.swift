@@ -55,7 +55,16 @@ class CloudinaryHelper {
                 if let error = error {
                     print("Error: \(error.localizedDescription)")
                 } else {
+                    dump(response)
+
                     print("Upload Success: \(response?.secureUrl ?? "No URL")")
+                    guard let photoId = response?.publicId,
+                          let url = response?.url
+                    else { return }
+                    let photo = Photo(photoId: photoId, url: url)
+                    Task {
+                        await NetworkManager().postPhoto(photo: photo)
+                    }
                 }
             }
     }
