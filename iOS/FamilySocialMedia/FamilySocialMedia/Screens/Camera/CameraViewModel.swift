@@ -68,7 +68,7 @@ class CameraViewModel {
         else { return }
 
         let image = UIImage.init(cgImage: currentFrame)
-
+        
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
 
         self.isSaved = true

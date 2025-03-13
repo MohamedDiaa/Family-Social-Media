@@ -101,7 +101,7 @@ struct CameraScreen: View {
     func useFrame() {
         guard let currentFrame = viewModel.currentFrame
         else { return }
-        image = UIImage.init(cgImage: currentFrame)
+        image = UIImage.init(cgImage: currentFrame).rotate(radians: Float.pi / 2)
     }
 }
 

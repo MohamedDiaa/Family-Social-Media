@@ -12,6 +12,8 @@ struct CreatePostScreen: View {
 
     @State var imgSelected: UIImage? = nil
     @State var showCamera: Bool = true
+    @State var uploadedSuccesfully = false
+
     var body: some View {
 
         if let img = imgSelected {
@@ -21,7 +23,11 @@ struct CreatePostScreen: View {
                 HStack(spacing: 10) {
 
                     Button {
-                        CloudinaryHelper.shared.upload(image: img)
+                        CloudinaryHelper.shared.upload(image: img, completion: { _ in
+                            
+                            uploadedSuccesfully = true
+
+                        })
 
                     } label: {
                         Text("Upoad")
@@ -40,6 +46,9 @@ struct CreatePostScreen: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 300, height: 300)
+            }
+            .alert("Uploaded", isPresented: $uploadedSuccesfully) {
+
             }
         }
         else {

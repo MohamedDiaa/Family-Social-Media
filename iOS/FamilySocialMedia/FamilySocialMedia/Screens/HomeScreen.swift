@@ -15,8 +15,6 @@ struct HomeScreen: View {
 
         ScrollView(.vertical) {
             VStack {
-                Text("Hello, World!")
-
 
                 if let photos {
                     ForEach(photos, id:\.photoId) { photo in
@@ -25,13 +23,18 @@ struct HomeScreen: View {
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
+                                .frame(maxWidth: .infinity)
                         } placeholder: {
                             Color.gray
                         }
-                        .frame(width: 250, height: 250)
+                        .padding(.horizontal)
+
+
                     }
                 }
-
+                else {
+                    ContentUnavailableView("No Photos Found", systemImage: "figure.walk.triangle")
+                }
             }
         }
         .task {

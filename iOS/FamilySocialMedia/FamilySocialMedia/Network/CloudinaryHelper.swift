@@ -42,7 +42,7 @@ class CloudinaryHelper {
 //        return cloudName
 //    }
 
-    func upload(image: UIImage) {
+    func upload(image: UIImage, completion: @escaping (Bool)-> Void) {
 
         guard let data = image.jpegData(compressionQuality: 1.0)
         else { return }
@@ -62,10 +62,10 @@ class CloudinaryHelper {
                           let url = response?.url
                     else { return }
                     let photo = Photo(photoId: photoId, url: url)
-                    print("sending")
-                    dump(photo)
+
                     Task {
                         await NetworkManager().postPhoto(photo: photo)
+                        completion(true)
                     }
                 }
             }
