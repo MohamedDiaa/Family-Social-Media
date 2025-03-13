@@ -59,12 +59,10 @@ struct CameraScreen: View {
 
                     if viewModel.isTaken {
                         Button {
-                            if !viewModel.isSaved {
-                                viewModel.savePic()
-                            }
+                            useFrame()
 
                         } label: {
-                            Text(viewModel.isSaved ? "Saved" : "Save")
+                            Text("Use")
                                 .foregroundStyle(.black)
                                 .fontWeight(.semibold)
                                 .padding(.vertical, 10)
@@ -95,13 +93,15 @@ struct CameraScreen: View {
                         }
                     }
                 }
+                .padding(.bottom, 20)
             }
         }
-        .onChange(of: viewModel.isSaved) { oldValue, newValue in
-            guard let currentFrame = viewModel.currentFrame
-            else { return }
-            image = UIImage.init(cgImage: currentFrame)
-        }
+    }
+
+    func useFrame() {
+        guard let currentFrame = viewModel.currentFrame
+        else { return }
+        image = UIImage.init(cgImage: currentFrame)
     }
 }
 

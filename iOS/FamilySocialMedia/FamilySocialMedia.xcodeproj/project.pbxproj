@@ -14,9 +14,22 @@
 		838815F92D80674D002C1EEF /* FamilySocialMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FamilySocialMedia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		83C7DCA22D839A4600093B0B /* Exceptions for "FamilySocialMedia" folder in "FamilySocialMedia" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 838815F82D80674D002C1EEF /* FamilySocialMedia */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		838815FB2D80674D002C1EEF /* FamilySocialMedia */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				83C7DCA22D839A4600093B0B /* Exceptions for "FamilySocialMedia" folder in "FamilySocialMedia" target */,
+			);
 			path = FamilySocialMedia;
 			sourceTree = "<group>";
 		};
@@ -264,6 +277,7 @@
 				DEVELOPMENT_TEAM = AUG35ETUWQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FamilySocialMedia/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app takes photo to share it with your family and friends";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -295,6 +309,7 @@
 				DEVELOPMENT_TEAM = AUG35ETUWQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FamilySocialMedia/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app takes photo to share it with your family and friends";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -62,6 +62,8 @@ class CloudinaryHelper {
                           let url = response?.url
                     else { return }
                     let photo = Photo(photoId: photoId, url: url)
+                    print("sending")
+                    dump(photo)
                     Task {
                         await NetworkManager().postPhoto(photo: photo)
                     }

@@ -6,11 +6,6 @@
 //
 import Foundation
 
-struct Photo: Codable {
-    var photoId: String
-    var url: String
-}
-
 class NetworkManager {
 
     func postPhoto(photo: Photo) async {
@@ -19,7 +14,10 @@ class NetworkManager {
             let url =  URL.init(string: "https://family-social-media.onrender.com/photo")!
             var request = URLRequest.init(url: url)
             request.httpMethod = "POST"
-            request.httpBody = try? JSONEncoder().encode(photo)
+
+            request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+            request.httpBody = try JSONEncoder().encode(photo)
 
 
             let (data, response) = try await URLSession.shared.data(for: request)

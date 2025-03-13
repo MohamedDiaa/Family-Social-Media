@@ -8,28 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var imgSelected: UIImage?
+
+    @State var selected: Int = 1
 
     var body: some View {
 
-        TabView {
+        TabView(selection: $selected){
 
-            HomeScreen(image: $imgSelected)
+            HomeScreen()
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
-                }
+                }.tag(1)
 
             PhotoPickerScreen()
                 .tabItem {
                     Image(systemName: "photo")
                     Text("Pick")
                 }
-            CameraScreen(image: $imgSelected)
+                .tag(2)
+            CreatePostScreen()
                 .tabItem {
                     Image(systemName: "camera")
-                    Text("Camera")
+                    Text("Post")
                 }
+                .tag(3)
         }
     }
 }

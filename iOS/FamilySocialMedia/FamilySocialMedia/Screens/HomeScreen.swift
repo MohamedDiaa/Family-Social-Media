@@ -8,34 +8,38 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    
-    @Binding var image: UIImage?
-    let cloudinary = CloudinaryHelper.shared
+
+    @State var photos: [Photo]?
 
     var body: some View {
-        VStack {
-            Text("Hello, World!")
 
-            if let image {
+        ScrollView(.vertical) {
+            VStack {
+                Text("Hello, World!")
 
 
-                Button {
-                    cloudinary.upload(image: image)
-                } label: {
+                if let photos {
+                    ForEach(photos, id:\.photoId) { photo in
 
-                    Text("upload image")
+                        AsyncImage(url: photo.thumbnail) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } placeholder: {
+                            Color.gray
+                        }
+                        .frame(width: 250, height: 250)
+                    }
                 }
 
-
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 300, height: 300)
             }
+        }
+        .task {
+            photos = await NetworkManager().getPhotos()
         }
     }
 }
 
 #Preview {
-    HomeScreen(image: .constant(nil))
+    HomeScreen()
 }
