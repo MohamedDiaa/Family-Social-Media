@@ -11,6 +11,8 @@ struct CameraScreen: View {
 
     @State private var viewModel = CameraViewModel()
 
+    @Binding var image: UIImage?
+
     var body: some View {
 
         ZStack {
@@ -95,11 +97,16 @@ struct CameraScreen: View {
                 }
             }
         }
+        .onChange(of: viewModel.isSaved) { oldValue, newValue in
+            guard let currentFrame = viewModel.currentFrame
+            else { return }
+            image = UIImage.init(cgImage: currentFrame)
+        }
     }
 }
 
 #Preview {
-    CameraScreen()
+    CameraScreen(image: .constant(nil))
 }
 
 

@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var imgSelected: UIImage?
+
     var body: some View {
 
         TabView {
 
-            HomeScreen()
+            HomeScreen(image: $imgSelected)
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
@@ -23,7 +25,7 @@ struct ContentView: View {
                     Image(systemName: "photo")
                     Text("Pick")
                 }
-            CameraScreen()
+            CameraScreen(image: $imgSelected)
                 .tabItem {
                     Image(systemName: "camera")
                     Text("Camera")
