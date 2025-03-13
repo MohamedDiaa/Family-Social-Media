@@ -26,3 +26,5 @@ build/
 .#*
 *.swp
 *.un~
+
+Keys.plist
