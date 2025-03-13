@@ -28,3 +28,5 @@ build/
 *.un~
 
 Keys.plist
+
+node_modules/
