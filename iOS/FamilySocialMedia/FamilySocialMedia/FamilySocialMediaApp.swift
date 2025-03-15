@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 @main
 struct FamilySocialMediaApp: App {
@@ -13,6 +14,7 @@ struct FamilySocialMediaApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.light)
+                .environment(AudioPlayer())
         }
     }
 }

@@ -13,6 +13,8 @@ struct CameraScreen: View {
 
     @Binding var image: UIImage?
 
+    @Environment(AudioPlayer.self) var audioPlayer
+
     var body: some View {
 
         ZStack {
@@ -77,6 +79,7 @@ struct CameraScreen: View {
                     }
                     else {
                         Button {
+                            audioPlayer.play(audio: .cameraShutter)
                             viewModel.takePic()
 
                         } label: {

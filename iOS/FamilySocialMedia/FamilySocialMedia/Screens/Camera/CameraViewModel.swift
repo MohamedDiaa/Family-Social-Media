@@ -34,6 +34,7 @@ class CameraViewModel {
 
     func takePic() {
         print("take pic")
+        
         DispatchQueue.global(qos: .userInitiated).async{
 
             self.cameraManager.captureSession.stopRunning()
